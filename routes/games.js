@@ -1,11 +1,13 @@
 var express = require('express');
 var router = express.Router();
-const { getGames, addGame } = require('../controllers/games.js')
+const { addProduct, getProductsByTerm, getProductsBySubcategory } = require('../controllers/games.js')
 
 /* GET home page. */
 // router.get('/', ()=> console.log('games'));
-router.get('/:id', getGames);
+router.get('/term/:id', getProductsByTerm);
 
-router.post('/', addGame);
+router.get('/subcategory/:id', getProductsBySubcategory);
+
+router.post('/', addProduct);
 
 module.exports = router;

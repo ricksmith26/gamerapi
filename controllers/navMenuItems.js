@@ -56,3 +56,13 @@ const searchTerms = async () => {
 			return searchTerms;
 		})
 }
+
+exports.addCategory = (req, res, next) => {
+	db.one(
+		'CREATE TABLE categories (category_id: SERIAL PRIMARY KEY, category_name: VARCHAR)'
+	).then(() => {
+		"INSERT INTO categories	(category_name)	VALUES('PlayStation')"
+	}).then((category) => {
+		res.send(category)
+	}).catch(next)
+}

@@ -6,25 +6,25 @@
 
 CREATE TABLE categories
 (
-    category_id: SERIAL PRIMARY KEY,
-    category_name: VARCHAR
+    category_id SERIAL PRIMARY KEY,
+    category_name VARCHAR
 )
 
 
 CREATE TABLE subcategories
 (
-    subcategory_id: SERIAL PRIMARY KEY,
-    subcategory_name: VARCHAR,
-    subcategory_link: VARCHAR,
-    FOREIGN KEY (category_id) REFERENCES areas(category_id)
+    subcategory_id SERIAL PRIMARY KEY,
+    subcategory_name VARCHAR NOT NULL,
+    subcategory_link VARCHAR NOT NULL,
+    FOREIGN KEY (category_id) REFERENCES areas(category_id) NOT NULL
 )
 
 CREATE TABLE search_terms
 (
-    search_term_id: SERIAL PRIMARY KEY,
-    search_term: VARCHAR,
-    search_term_link: VARCHAR,
-    FOREIGN KEY (subcategory_id) REFERENCES subcategory(subcategory_id)
+    search_term_id SERIAL PRIMARY KEY,
+    search_term VARCHAR NOT NULL ,
+    search_term_link VARCHAR NOT NULL,
+    FOREIGN KEY (subcategory_id) REFERENCES subcategory(subcategory_id) NOT NULL
 )
 
 CREATE games
