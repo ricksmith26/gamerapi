@@ -1,6 +1,6 @@
-const {database} = require('./config');
-const pgp = require("pg-promise")({ promiseLib: Promise });
-const db = pgp(database);
+// const {database} = require('./config');
+// const pgp = require("pg-promise")({ promiseLib: Promise });
+const {pgp, db} = require('./config');
 
 exports.getProductsByTerm = (req, res ,next) => {
     const id = req.params.id;
@@ -53,6 +53,16 @@ exports.addProduct = (req, res ,next) => {
     ]
     ).then(produect => {
         res.send(produect);
+    })
+    .catch(next)
+}
+
+exports.getProductById = (req, res ,next) => {
+    const id = req.params.id;
+    db.many(
+        "SELECT * FROM products WHERE products.product_id = $1", [id]
+    ).then((game) => {
+        res.send(game)
     })
     .catch(next)
 }
