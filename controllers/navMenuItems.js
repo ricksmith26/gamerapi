@@ -1,6 +1,4 @@
 const {db} = require('./config');
-// const pgp = require("pg-promise")({ promiseLib: Promise });
-// const db = pgp(database);
 
 exports.getCategories = (req, res, next) => {
 	Promise.all([categories(), subCategories(), searchTerms()])

@@ -7,6 +7,7 @@ var logger = require('morgan');
 var usersRouter = require('./routes/users');
 var menuRouter = require('./routes/menuItems');
 var productsRouter = require('./routes/products');
+var paymentsRouter = require('./routes/payments');
 
 var app = express();
 app.use(cors())
@@ -19,5 +20,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', menuRouter);
 app.use('/users', usersRouter);
 app.use('/products', productsRouter);
+app.use('/payments', paymentsRouter);
 
 module.exports = app;

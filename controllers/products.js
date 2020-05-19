@@ -1,5 +1,3 @@
-// const {database} = require('./config');
-// const pgp = require("pg-promise")({ promiseLib: Promise });
 const {pgp, db} = require('./config');
 
 exports.getProductsByTerm = (req, res ,next) => {
