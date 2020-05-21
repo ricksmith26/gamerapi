@@ -1,4 +1,4 @@
-const {db} = require('./config');
+const { db } = require('./config');
 
 exports.getCategories = (req, res, next) => {
 	Promise.all([categories(), subCategories(), searchTerms()])
@@ -11,7 +11,7 @@ exports.getCategories = (req, res, next) => {
 							acc.push({
 								...subCategory,
 								searchTerms: searchTerms.reduce((arr, term) => {
-									if (term.subcategory_id === subCategory.subcategory_id){
+									if (term.subcategory_id === subCategory.subcategory_id) {
 										arr.push(term);
 									}
 									return arr
@@ -22,7 +22,7 @@ exports.getCategories = (req, res, next) => {
 					}, [])
 				}
 			})
-				res.send(menuItems);
+			res.send(menuItems);
 		})
 		.catch(next);
 
@@ -32,7 +32,7 @@ const categories = async () => {
 	return db
 		.many("SELECT * FROM categories ORDER BY categories.category_id ASC;")
 		.then(categories => {
-		
+
 			return categories;
 		})
 }
@@ -50,7 +50,6 @@ const searchTerms = async () => {
 	return db
 		.many("SELECT * FROM search_terms;")
 		.then(searchTerms => {
-
 			return searchTerms;
 		})
 }

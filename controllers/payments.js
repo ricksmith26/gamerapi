@@ -1,4 +1,5 @@
 const {pgp, db} = require('./config');
+
 const stripe = require('stripe')('sk_test_G3vurnxjtg2gZRf6lQMT8YwA00fCJKlgLx');
 
 exports.addToken = (req, res ,next) => {
@@ -37,10 +38,7 @@ exports.createIntent = async (req, res, next) => {
         const intent = await stripe.paymentIntents.create({
             amount: total * 100,
             currency: 'gbp',
-            customer: id,
-            metadata: {
-                order_id: `${Math.random(1 * 1000)}`,
-              },
+            setup_future_usage: 'off_session'
           });
 
         res.send(intent);

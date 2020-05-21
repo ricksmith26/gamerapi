@@ -64,3 +64,27 @@ exports.getProductById = (req, res ,next) => {
     })
     .catch(next)
 }
+
+exports.addImg = (req, res, next) => {
+    const {image, brand} = req.body;
+    console.log(req.body, '<<<<<<<<<<<<<<<<')
+    db.one(
+        'INSERT INTO brand_images (image, brand) VALUES ($1, $2) RETURNING *;',
+        [
+            image,
+            brand
+        ]
+    ).then((image) => {
+        res.send(image)
+    }).catch(next)
+}
+
+exports.getImg = (req, res, next) => {
+    const brand = req.params.brand;
+    db.one(
+        'SELECT * FROM brand_images WHERE brand = $1;',
+        [brand]
+    ).then((image) => {
+        res.send(image)
+    }).catch(next)
+}

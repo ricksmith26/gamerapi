@@ -8,8 +8,9 @@ const database = {
 };
 
 const pgp = require("pg-promise")({ promiseLib: Promise });
+
 const db = pgp(database);
 
 module.exports = {
-    pgp, db
+    pgp, db, database
 };
