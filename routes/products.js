@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const { addProduct, getProductsByTerm, getProductsBySubcategory, getProductById, addImg, getImg } = require('../controllers/products.js')
-const { seedData } = require('../controllers/seed');
+// const { seedData } = require('../controllers/seed');
 
 router.get('/term/:id', getProductsByTerm);
 
@@ -15,6 +15,6 @@ router.post('/addImg', addImg)
 
 router.get('/getImg/:brand', getImg)
 
-router.get('/seed', seedData)
+// router.get('/seed', seedData)
 
 module.exports = router;

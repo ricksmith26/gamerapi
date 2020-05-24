@@ -3,10 +3,6 @@ const {pgp, db} = require('./config');
 // const {data} = require('./data/seedData');
 const imageToBase64 = require('image-to-base64');
 const randtoken = require('rand-token');
-// import * as axios from 'axios';
-// const xbox = require('./data/XboxFront.jpg');
-// const ps4 = '';
-
 
 const momentRandom = require('moment-random');
 
@@ -250,16 +246,21 @@ const data = {
 
 const database = require('./config');
 
+// var knex = require('knex')({
+//     client: 'pg',
+//     version: '8.2.1',
+//     connection: {
+//       host : `${database.host}:${database.port}`,
+//       user : database.user,
+//       password : database.password,
+//       database : database.database
+//     }
+//   });
+
 var knex = require('knex')({
     client: 'pg',
-    version: '8.2.1',
-    connection: {
-      host : database.host,
-      user : database.user,
-      password : database.password,
-      database : database.database
-    }
-  });
+    connection: `${database.database}://${database.user}:${database.password}@${database.host}:${database.port}/${database.database}`
+  })
 
 
 const getIndex = (i) => {
@@ -274,37 +275,98 @@ const getIndex = (i) => {
     }
 }
 
-// exports.seedData = async (res, req, next) => {
-//     Promise.all([categories(), subCategories(), searchTerms()])
-// 		.then(([categories, subCategories, searchTerms]) => {
-// 			const menuItems = categories.map( async(category, i) => {
-//                 if (i >= 3) {
-//                     return;
-//                 }
-//                 console.log(i,category)
-//                 const brand = getIndex(i);
-//                 // console.log('>>>>>>BRAND', brand)
-//                 const image = await  db.one(
-//                     'SELECT * FROM brand_images WHERE brand = $1;',
-//                     [brand]
-//                 ).catch(next)
-//                 console.log(image, 'IMAGE<<<<<<<<<<<<<<<<<,,,' ,i)
-// 				return {
-// 					...category,
-// 					subcategories: subCategories.forEach(async (subCategory) => {
-//                         if (subCategory.subcategory_name.toLowerCase().includes('games')){
-//                             searchTerms.forEach((term) => {
-//                                 // console.log('>>>>>TERM', term.search_term_link, term)
-//                                 if (term.subcategory_id  === subCategory.subcategory_id && i < 3) {
-//                                     data[term.search_term_link.split('/')[1]].forEach(async(name) => {
-//                                         // console.log(term, subCategory.subcategory_id, '<<<<####')
-//                                         await db.one(
-//                                             'INSERT INTO products (product_name, product_description, product_more_details, product_release_date, product_pegi, product_genre, product_images, product_price, subcategory_id, category_id, search_term_id, bundle_ids) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)',
-//                                             [
-//                                                 name,
-//                                                 description,
-//                                                 more_details,
-//                                                 moment(new Date(+(new Date()) - Math.floor(Math.random()*1000000000000))).format('DD/MM/YYYY'),
+function randomNumberGenerator(min = 0, max = 1, fractionDigits = 0, inclusive = true) {
+    const precision = Math.pow(10, Math.max(fractionDigits, 0));
+    const scaledMax = max * precision;
+    const scaledMin = min * precision;
+    const offset = inclusive ? 1 : 0;
+    const num = Math.floor(Math.random() * (scaledMax - scaledMin + offset)) + scaledMin;
+  
+    return num / precision;
+  };
+
+const seedData = (req, res, next) => {
+	Promise.all([categories(), subCategories(), searchTerms(), getImg()])
+		.then(async ([categories, subCategories, searchTerms, images]) => {
+			const menuItems = categories.map((category, i) => {
+                // if (i < 3){
+                    return {
+                        ...category,
+                        subcategories: subCategories.reduce((acc, subCategory) => {
+                            if (subCategory.category_id === category.category_id) {
+                                acc.push({
+                                    ...subCategory,
+                                    searchTerms: searchTerms.reduce((arr, term) => {
+                                        if (term.subcategory_id === subCategory.subcategory_id) {
+                                            arr.push(term);
+                                        }
+                                        return arr
+                                    }, [])
+                                })
+                            }
+                            return acc;
+                        }, [])
+                    }
+                // }
+			})
+            const [ps4, xbox, nSwitch] = images;
+            const games = [];
+            menuItems.forEach((val) => {
+                val.subcategories.forEach((subcategory, i) => {
+                    if (i < 3 && subcategory.subcategory_name.includes('Games')) {
+                        subcategory.searchTerms.forEach((term) => {
+                            data[term.search_term_link.split('/')[1]].forEach(name => {
+                                // console.log({
+                                //     product_name: name,
+                                //     produdct_description: description,
+                                //     product_more_details: more_details,
+                                //     product_release_date: moment(new Date(+(new Date()) - Math.floor(Math.random()*1000000000000))).format('DD/MM/YYYY'),
+                                //     product_pegi: pegis[Math.floor(Math.random() * 5) + 1],
+                                //     product_genre: term.search_term,
+                                //     product_image: subcategory.category_id = 1 ? ps4 : (subcategories.category_id === 2 ? xbox : nSwitch),
+                                //     product_price: randomNumberGenerator(10, 50, 2),
+                                //     subcategory_id: subcategory.subcategory_id,
+                                //     category_id: subcategory.subcategory_id,
+                                //     search_term_id: term.search_term_id,
+                                //     bundle_ids: null,
+                                //     SKU: randtoken.generate(16)
+                                // }, val)
+                                games.push({
+                                    product_name: name,
+                                    product_description: description,
+                                    product_more_details: more_details,
+                                    product_release_date: moment(new Date(+(new Date()) - Math.floor(Math.random()*1000000000000))).format('DD/MM/YYYY'),
+                                    product_pegi: pegis[Math.floor(Math.random() * 5) + 1],
+                                    product_genre: term.search_term,
+                                    product_images: subcategory.category_id = 1 ? ps4.image : (subcategories.category_id === 2 ? xbox.image : nSwitch.image),
+                                    product_price: randomNumberGenerator(10, 50, 2),
+                                    subcategory_id: subcategory.subcategory_id,
+                                    category_id: 1,
+                                    search_term_id: term.search_term_id,
+                                    bundle_ids: '',
+                                    SKU: randtoken.generate(16)
+                                })
+                            })
+                        })
+                    }
+                })
+            })
+            // games.forEach(async (game) => {
+            //     setTimeout(async () => {
+            //         await addProduct(game)
+            //     }, 50)});
+            // console.log(games[0])
+            // addProduct(games[0])
+            games.forEach((game, i) => {
+                addProduct(game);
+            })
+            
+            
+		}).catch(next)
+
+}
+
+// moment(new Date(+(new Date()) - Math.floor(Math.random()*1000000000000))).format('DD/MM/YYYY'),
 //                                                 pegis[Math.floor(Math.random() * 5) + 1],
 //                                                 term.search_term,
 //                                                 image.image,
@@ -315,36 +377,17 @@ const getIndex = (i) => {
 //                                                 'Test',
 //                                                 // randtoken.generate(16)
 
-//                                             ]
-//                                         )
-//                                     })
-//                                 }
-//                             })
-//                         }
-//                     })
-// 				}
-// 			})
-//             // console.log(menuItems, 'meniItems,<<<<<<<<<<<<,,,')
-// 		}).catch(next)
-// }
-
-// const getImage = () => {
-//     imageToBase64(xbox) // you can also to use url
-//     .then(
-//         (response) => {
-//             console.log(response); //cGF0aC90by9maWxlLmpwZw==7
-//             return response;
-//         }
-//     )
-// }
-
 const categories = async () => {
 	return db
 		.many("SELECT * FROM categories ORDER BY categories.category_id ASC;")
 		.then(categories => {
 
 			return categories;
-		})
+    	})
+    // return knex('categories')
+    //     .then(categories => {
+    //         return categories
+    //     })
 }
 
 const subCategories = async () => {
@@ -353,7 +396,11 @@ const subCategories = async () => {
 		.then(subCategories => {
 
 			return subCategories;
-		})
+    	})
+    // return knex('subCategories')
+    //     .then(subcategories => {
+    //         return subcategories;
+    //     })
 }
 
 const searchTerms = async () => {
@@ -361,20 +408,68 @@ const searchTerms = async () => {
 		.many("SELECT * FROM search_terms;")
 		.then(searchTerms => {
 			return searchTerms;
-		})
+    	})
+    // return knex('search_terms')
+    // .then(search_terms => {
+    //     return search_terms;
+    // })
+}
+
+const getImg = async () => {
+    return db.many(
+        "SELECT * FROM brand_images"
+    ).then(images => {
+        return images;
+    })
+}
+
+const addProduct = (product) => {
+    // console.log(product)
+    const {
+        product_name,
+        product_description,
+        product_more_details,
+        product_release_date,
+        product_pegi,
+        product_genre,
+        product_images,
+        product_price,
+        subcategory_id,
+        category_id,
+        search_term_id,
+        bundle_ids
+     } = product;
+    db
+    .one(
+      "INSERT INTO products (product_name, product_description, product_more_details, product_release_date, product_pegi, product_genre, product_images, product_price, subcategory_id, category_id, search_term_id,bundle_ids) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *",
+      [product_name,
+        product_description,
+        product_more_details,
+        product_release_date,
+        product_pegi,
+        product_genre,
+        product_images,
+        product_price,
+        subcategory_id,
+        category_id,
+        search_term_id,
+        bundle_ids
+    ]
+    ).then(produect => {
+        return produect;
+    })
 }
 
 
-function randomNumberGenerator(min = 0, max = 1, fractionDigits = 0, inclusive = true) {
-    const precision = Math.pow(10, Math.max(fractionDigits, 0));
-    const scaledMax = max * precision;
-    const scaledMin = min * precision;
-    const offset = inclusive ? 1 : 0;
-    const num = Math.floor(Math.random() * (scaledMax - scaledMin + offset)) + scaledMin;
+
+
+// function randomNumberGenerator(min = 0, max = 1, fractionDigits = 0, inclusive = true) {
+//     const precision = Math.pow(10, Math.max(fractionDigits, 0));
+//     const scaledMax = max * precision;
+//     const scaledMin = min * precision;
+//     const offset = inclusive ? 1 : 0;
+//     const num = Math.floor(Math.random() * (scaledMax - scaledMin + offset)) + scaledMin;
   
-    return num / precision;
-  };
-// seedData();
-
-// console.log( getImage() )
-
+//     return num / precision;
+//   };
+//   seedData();
