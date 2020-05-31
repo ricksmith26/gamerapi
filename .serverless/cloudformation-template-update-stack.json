@@ -146,7 +146,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/sample-app/dev/1590944954787-2020-05-31T17:09:14.787Z/sample-app.zip"
+          "S3Key": "serverless/sample-app/dev/1590945793363-2020-05-31T17:23:13.363Z/sample-app.zip"
         },
         "FunctionName": "sample-app-dev-app",
         "Handler": "app/app.handler",
@@ -164,14 +164,14 @@
         "AppLogGroup"
       ]
     },
-    "AppLambdaVersionuHogYos4NseSCoJ5icbM7nSIAUPpagPggnes13tt53g": {
+    "AppLambdaVersionzq5IS14jGXLyHcuU7gz7bl7VPp09aHFxjobimkLhY": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AppLambdaFunction"
         },
-        "CodeSha256": "RVmsqQUOwPhsp4TRQ7bB89kGQ9d2nLYYfjQfp/EgFjg="
+        "CodeSha256": "fs0n15JJ/fH9H3uUSAPxN74hsMsHzYcFegfWSiOjGd8="
       }
     },
     "ApiGatewayRestApi": {
@@ -186,14 +186,51 @@
         "Policy": ""
       }
     },
-    "ApiGatewayResourceProxyVar": {
+    "ApiGatewayResourceHttps": {
       "Type": "AWS::ApiGateway::Resource",
       "Properties": {
         "ParentId": {
           "Fn::GetAtt": [
             "ApiGatewayRestApi",
             "RootResourceId"
-          ]
+          ],
+          "Ref": "ApiGatewayResourceHttps"
+        },
+        "PathPart": "",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceHttpsSxgtr83ijiexecuteDashapiusDasheastDash1amazonawscom": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceHttps"
+        },
+        "PathPart": "sxgtr83iji.execute-api.us-east-1.amazonaws.com",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceHttpsSxgtr83ijiexecuteDashapiusDasheastDash1amazonawscomDev": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceHttpsSxgtr83ijiexecuteDashapiusDasheastDash1amazonawscom"
+        },
+        "PathPart": "dev",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceHttpsSxgtr83ijiexecuteDashapiusDasheastDash1amazonawscomDevProxyVar": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceHttpsSxgtr83ijiexecuteDashapiusDasheastDash1amazonawscomDev"
         },
         "PathPart": "{proxy+}",
         "RestApiId": {
@@ -201,7 +238,7 @@
         }
       }
     },
-    "ApiGatewayMethodOptions": {
+    "ApiGatewayMethodHttpsSxgtr83ijiexecuteDashapiusDasheastDash1amazonawscomDevOptions": {
       "Type": "AWS::ApiGateway::Method",
       "Properties": {
         "AuthorizationType": "NONE",
@@ -239,17 +276,14 @@
           ]
         },
         "ResourceId": {
-          "Fn::GetAtt": [
-            "ApiGatewayRestApi",
-            "RootResourceId"
-          ]
+          "Ref": "ApiGatewayResourceHttpsSxgtr83ijiexecuteDashapiusDasheastDash1amazonawscomDev"
         },
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
         }
       }
     },
-    "ApiGatewayMethodProxyVarOptions": {
+    "ApiGatewayMethodHttpsSxgtr83ijiexecuteDashapiusDasheastDash1amazonawscomDevProxyVarOptions": {
       "Type": "AWS::ApiGateway::Method",
       "Properties": {
         "AuthorizationType": "NONE",
@@ -287,23 +321,20 @@
           ]
         },
         "ResourceId": {
-          "Ref": "ApiGatewayResourceProxyVar"
+          "Ref": "ApiGatewayResourceHttpsSxgtr83ijiexecuteDashapiusDasheastDash1amazonawscomDevProxyVar"
         },
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
         }
       }
     },
-    "ApiGatewayMethodAny": {
+    "ApiGatewayMethodHttpsSxgtr83ijiexecuteDashapiusDasheastDash1amazonawscomDevAny": {
       "Type": "AWS::ApiGateway::Method",
       "Properties": {
         "HttpMethod": "ANY",
         "RequestParameters": {},
         "ResourceId": {
-          "Fn::GetAtt": [
-            "ApiGatewayRestApi",
-            "RootResourceId"
-          ]
+          "Ref": "ApiGatewayResourceHttpsSxgtr83ijiexecuteDashapiusDasheastDash1amazonawscomDev"
         },
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
@@ -340,13 +371,13 @@
         "MethodResponses": []
       }
     },
-    "ApiGatewayMethodProxyVarAny": {
+    "ApiGatewayMethodHttpsSxgtr83ijiexecuteDashapiusDasheastDash1amazonawscomDevProxyVarAny": {
       "Type": "AWS::ApiGateway::Method",
       "Properties": {
         "HttpMethod": "ANY",
         "RequestParameters": {},
         "ResourceId": {
-          "Ref": "ApiGatewayResourceProxyVar"
+          "Ref": "ApiGatewayResourceHttpsSxgtr83ijiexecuteDashapiusDasheastDash1amazonawscomDevProxyVar"
         },
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
@@ -383,7 +414,7 @@
         "MethodResponses": []
       }
     },
-    "ApiGatewayDeployment1590944944777": {
+    "ApiGatewayDeployment1590945783227": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -392,10 +423,10 @@
         "StageName": "dev"
       },
       "DependsOn": [
-        "ApiGatewayMethodOptions",
-        "ApiGatewayMethodProxyVarOptions",
-        "ApiGatewayMethodAny",
-        "ApiGatewayMethodProxyVarAny"
+        "ApiGatewayMethodHttpsSxgtr83ijiexecuteDashapiusDasheastDash1amazonawscomDevOptions",
+        "ApiGatewayMethodHttpsSxgtr83ijiexecuteDashapiusDasheastDash1amazonawscomDevProxyVarOptions",
+        "ApiGatewayMethodHttpsSxgtr83ijiexecuteDashapiusDasheastDash1amazonawscomDevAny",
+        "ApiGatewayMethodHttpsSxgtr83ijiexecuteDashapiusDasheastDash1amazonawscomDevProxyVarAny"
       ]
     },
     "AppLambdaPermissionApiGateway": {
@@ -445,7 +476,7 @@
     "AppLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AppLambdaVersionuHogYos4NseSCoJ5icbM7nSIAUPpagPggnes13tt53g"
+        "Ref": "AppLambdaVersionzq5IS14jGXLyHcuU7gz7bl7VPp09aHFxjobimkLhY"
       }
     },
     "ServiceEndpoint": {
