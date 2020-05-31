@@ -10,10 +10,10 @@ functions:
     handler: app/app.handler
     events: 
       - http: 
-          path: https://sxgtr83iji.execute-api.us-east-1.amazonaws.com/dev/
+          path: /
           method: ANY
           cors: true
       - http: 
-          path: https://sxgtr83iji.execute-api.us-east-1.amazonaws.com/dev/{proxy+}
+          path: /{proxy+}
           method: ANY
           cors: true
