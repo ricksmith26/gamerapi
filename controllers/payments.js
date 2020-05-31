@@ -30,7 +30,6 @@ exports.createIntent = async (req, res, next) => {
     ).then( async (items) => {
 
         const total = items.reduce((acc, item) => {
-            console.log(Number(item.product_price), basket, 'item.product_price')
             acc+= item.product_price * basket[item.product_id].qty;
             return acc;
         }, 0).toFixed(2)

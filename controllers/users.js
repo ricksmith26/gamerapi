@@ -49,7 +49,6 @@ exports.loginFromToken = (req, res, next) => {
     db.one(
         'SELECT * FROM users WHERE users.login_token = $1;', [token]
     ).then((user) => {
-        console.log(user, 'user<<<,,')
         const currentTime = Date.now();
         if ((currentTime - user.last_login) < 14400000){
             db.one(

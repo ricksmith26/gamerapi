@@ -135,11 +135,9 @@ exports.getTitle = async (req, res, next) => {
 
 exports.getSearchItems = (req, res, next) => {
     const search = req.params.search;
-    console.log(search, '<<<<@@@@')
     db.many(
         `SELECT * FROM products WHERE lower(product_name) LIKE '${search.toLowerCase()}%';`,
     ).then((searchResults) => {
-        console.log(searchResults, '<<<<<<SR')
         res.send(searchResults)
     }).catch(next)
 }
