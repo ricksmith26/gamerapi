@@ -33,10 +33,10 @@ exports.createIntent = async (req, res, next) => {
             console.log(Number(item.product_price), basket, 'item.product_price')
             acc+= item.product_price * basket[item.product_id].qty;
             return acc;
-        }, 0)
+        }, 0).toFixed(2)
 
         const intent = await stripe.paymentIntents.create({
-            amount: total * 100,
+            amount: Math.floor(total * 100),
             currency: 'gbp',
             setup_future_usage: 'off_session'
           });

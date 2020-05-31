@@ -13,24 +13,34 @@ exports.registerUser = (req, res ,next) => {
         user_address3,
         user_post_code
      } = req.body;
-    db
-    .one(
-      "INSERT INTO users (user_first_name, user_last_name, user_email, user_password, user_phone_number, user_address1, user_address2, user_address3, user_post_code, last_login, login_token) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *",
-      [ user_first_name,
-        user_last_name,
-        user_email,
-        user_password,
-        user_phone_number,
-        user_address1,
-        user_address2,
-        user_address3,
-        user_post_code,
-        Date.now(),
-        randtoken.generate(16)
-    ]
-    ).then(user => {
-        res.send(user);
+    db.one(
+        "SELECT EXISTS(SELECT * FROM users WHERE user_email = $1)",
+        [user_first_name]
+    ).then((exists) => {
+        if (exists) {
+            res.send({error: 'email already exists'})
+        } else {
+            db
+            .one(
+              "INSERT INTO users (user_first_name, user_last_name, user_email, user_password, user_phone_number, user_address1, user_address2, user_address3, user_post_code, last_login, login_token) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *",
+              [ user_first_name,
+                user_last_name,
+                user_email,
+                user_password,
+                user_phone_number,
+                user_address1,
+                user_address2,
+                user_address3,
+                user_post_code,
+                Date.now(),
+                randtoken.generate(16)
+            ]
+            ).then(user => {
+                res.send(user);
+            })
+        }
     })
+   
     .catch(next)
 }
 

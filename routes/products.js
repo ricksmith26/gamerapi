@@ -1,7 +1,18 @@
 var express = require('express');
 var router = express.Router();
-const { addProduct, getProductsByTerm, getProductsBySubcategory, getProductById, addImg, getImg } = require('../controllers/products.js')
-// const { seedData } = require('../controllers/seed');
+const {
+    addProduct,
+    getProductsByTerm,
+    getProductsBySubcategory,
+    getProductById,
+    addImg,
+    getImg,
+    getSaleGames,
+    getSaleHardware,
+    getMoreLikeThis,
+    getTitle,
+    getSearchItems
+ } = require('../controllers/products.js')
 
 router.get('/term/:id', getProductsByTerm);
 
@@ -15,6 +26,14 @@ router.post('/addImg', addImg)
 
 router.get('/getImg/:brand', getImg)
 
-// router.get('/seed', seedData)
+router.get('/getSaleGames', getSaleGames)
+
+router.get('/getSaleHardware', getSaleHardware)
+
+router.get('/getMoreLikeThis/:id', getMoreLikeThis)
+
+router.post('/getTitle', getTitle)
+
+router.get('/search/:search', getSearchItems)
 
 module.exports = router;
