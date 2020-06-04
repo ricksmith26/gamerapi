@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "aws-serverless-express": "^3.3.8",
     "axios": "^0.19.2",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
@@ -23,6 +24,7 @@
     "stripe": "^8.52.0"
   },
   "devDependencies": {
+    "claudia": "^5.12.0",
     "nodemon": "^2.0.3"
   }
 }

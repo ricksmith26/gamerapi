@@ -27,7 +27,7 @@ var server = http.createServer(app);
  */
 
 // server.listen(port);
-module.exports.handler = serverless(app);
+
 server.on('error', onError);
 server.on('listening', onListening);
 
@@ -90,3 +90,5 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+module.exports.handler = serverless(server);

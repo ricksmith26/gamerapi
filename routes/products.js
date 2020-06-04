@@ -20,11 +20,7 @@ router.get('/subcategory/:id', getProductsBySubcategory);
 
 router.get('/id/:id', getProductById)
 
-router.post('/', addProduct);
-
-router.post('/addImg', addImg)
-
-router.get('/getImg/:brand', getImg)
+// router.get('/getImg/:brand', getImg)
 
 router.get('/getSaleGames', getSaleGames)
 
@@ -32,8 +28,12 @@ router.get('/getSaleHardware', getSaleHardware)
 
 router.get('/getMoreLikeThis/:id', getMoreLikeThis)
 
+router.get('/search/:search', getSearchItems)
+
 router.post('/getTitle', getTitle)
 
-router.get('/search/:search', getSearchItems)
+router.post('/', addProduct);
+
+// router.post('/addImg', addImg)
 
 module.exports = router;
