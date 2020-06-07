@@ -114,10 +114,12 @@ exports.getTitle = async (req, res, next) => {
 
     const { term, subcategory } = req.body;
     if (term !== 'none') {
-        return getTermName(term).then(search_term => {
-            db.one('SELECT * FROM subcategories')
-        })
-   
+        return getTermName(subcategory)
+            .then(termName => {
+                const name = termName;
+                
+                res.send(name)
+            }).catch(next)
     } else {
         return getSubcategoryName(subcategory)
             .then(subcategory => {
@@ -204,8 +206,10 @@ const getXboxAccessories =  async () => {
 
 const getTermName = async (id) => {
     return db
-        .one('SELECT search_term, search_term, subcategory_name FROM search_terms INNER JOIN subcategories ON subcategories.subcategory_id = search_terms.subcategory_id WHERE search_terms.search_term_id = 35; $1',
-         [id])
+        .many(
+            'SELECT search_term, subcategory_name FROM search_terms INNER JOIN subcategories ON subcategories.subcategory_id = search_terms.subcategory_id WHERE search_terms.search_term_id = $1;',
+            [id]
+            )
         .then(term => {
             return term;
         })
@@ -213,7 +217,7 @@ const getTermName = async (id) => {
 
 const getSubcategoryName = async (id) => {
     return db
-        .one('SELECT  FROM subcategories WHERE subcategory_id = $1', [id])
+        .one('SELECT * FROM subcategories WHERE subcategory_id = $1', [id])
         .then(subcategory => {
             return subcategory
         })
