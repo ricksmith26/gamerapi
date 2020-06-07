@@ -115,14 +115,7 @@ exports.getTitle = async (req, res, next) => {
     const { term, subcategory } = req.body;
     if (term !== 'none') {
         return getTermName(term).then(search_term => {
-            return  db.one(
-                    'SELECT subcategory_name FROM subcategories WHERE subcategory_id = $1',
-                    [search_term.subcategory_id]
-                    )
-                    .then(([search_term, subcategory_name]) => {
-                        res.send(`${search_term} ${subcategory_name}`)
-                    })
-                    .catch(next)
+            db.one('SELECT * FROM subcategories')
         })
    
     } else {
@@ -211,7 +204,8 @@ const getXboxAccessories =  async () => {
 
 const getTermName = async (id) => {
     return db
-        .one('SELECT * FROM search_terms WHERE search_term_id = $1', [id])
+        .one('SELECT search_term, search_term, subcategory_name FROM search_terms INNER JOIN subcategories ON subcategories.subcategory_id = search_terms.subcategory_id WHERE search_terms.search_term_id = 35; $1',
+         [id])
         .then(term => {
             return term;
         })
