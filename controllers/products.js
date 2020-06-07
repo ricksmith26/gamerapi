@@ -114,15 +114,17 @@ exports.getTitle = async (req, res, next) => {
 
     const { term, subcategory } = req.body;
     if (term !== 'none') {
-        return Promise.all([
-            getTermName(term),
-            getSubcategoryName(subcategory)
-        ]).then(([termName, subcategory]) => {
-            const name = `${termName.search_term} ${subcategory.subcategory_name}`
-
-            res.send(name)
+        return getTermName(term).then(search_term => {
+            return  db.one(
+                    'SELECT subcategory_name FROM subcategories WHERE subcategory_id = $1',
+                    [search_term.subcategory_id]
+                    )
+                    .then(([search_term, subcategory_name]) => {
+                        res.send(`${search_term} ${subcategory_name}`)
+                    })
+                    .catch(next)
         })
-            .catch(next)
+   
     } else {
         return getSubcategoryName(subcategory)
             .then(subcategory => {
@@ -217,7 +219,7 @@ const getTermName = async (id) => {
 
 const getSubcategoryName = async (id) => {
     return db
-        .one('SELECT * FROM subcategories WHERE subcategory_id = $1', [id])
+        .one('SELECT  FROM subcategories WHERE subcategory_id = $1', [id])
         .then(subcategory => {
             return subcategory
         })
